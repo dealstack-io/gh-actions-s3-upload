@@ -2,7 +2,7 @@ const aws = require("aws-sdk");
 const fs = require("fs");
 const path = require("path");
 
-const spacesEndpoint = new aws.Endpoint(process.env.S3_ENDPOINT);
+const spacesEndpoint = new aws.Endpoint('s3.amazonaws.com');
 const s3 = new aws.S3({
   endpoint: spacesEndpoint,
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -18,12 +18,15 @@ const uploadFile = (fileName) => {
     });
   } else {
     const fileContent = fs.readFileSync(fileName);
-    const destinationDir = path.normalize(fileName).replace(filePath, '').replace('^\/\/', '/')
+    var destinationPath = path.normalize(fileName).replace(filePath, '')
+    if (destinationPath.charAt(0) == "/") {
+      destinationPath = destinationPath.substring(1);
+    }
 
     // Setting up S3 upload parameters
     const params = {
       Bucket: process.env.S3_BUCKET,
-      Key: destinationDir,
+      Key: destinationPath,
       Body: fileContent,
     };
     const acl = process.env.S3_ACL;
