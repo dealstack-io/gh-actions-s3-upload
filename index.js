@@ -18,7 +18,7 @@ const uploadFile = (fileName) => {
     });
   } else {
     const fileContent = fs.readFileSync(fileName);
-    const destinationDir = path.normalize(fileName).replace(filePath, '')
+    const destinationDir = path.normalize(fileName).replace(filePath, '').replace(/([^:]\/)\/+/g, "$1")
 
     // Setting up S3 upload parameters
     const params = {
