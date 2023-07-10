@@ -1,5 +1,6 @@
 const aws = require("aws-sdk");
 const fs = require("fs");
+const mime = require("mime-types")
 const path = require("path");
 
 const spacesEndpoint = new aws.Endpoint('s3.amazonaws.com');
@@ -28,6 +29,7 @@ const uploadFile = (fileName) => {
       Bucket: process.env.S3_BUCKET,
       Key: destinationPath,
       Body: fileContent,
+      ContentType: mime.lookup(fileName)
     };
     const acl = process.env.S3_ACL;
     if (acl) {
